@@ -1,0 +1,207 @@
+/* Base Layout & Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: #f3f4f6; /* Light gray background like your screenshot */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* HEADER - EXACT MATCH TO LIST.HTML */
+.top-nav {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between; /* Pins Logo Left, User Info Right */
+    align-items: center;
+    padding: 10px 50px; /* Exact padding from your list page */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-logo {
+    height: 40px; /* Professional size fixed */
+    width: auto;
+    display: block;
+}
+
+.logo-text {
+    font-weight: 700;
+    font-size: 18px;
+    color: #4a90e2; /* Brand Blue */
+}
+
+/* USER SECTION - UPPER RIGHT */
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-greeting {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Making the username extra bold like 'admin!' */
+.user-greeting strong {
+    font-weight: 800;
+    color: #000;
+}
+
+.logout-btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #357abd;
+}
+
+/* CENTERED CARD CONTAINER */
+.main-wrapper {
+    flex: 1; /* Pushes footer to the bottom */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 20px;
+}
+
+.card-container {
+    background: white;
+    width: 100%;
+    max-width: 550px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.main-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #000;
+    letter-spacing: -0.5px;
+}
+
+.sub-heading {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+/* FORM STYLING */
+.form-fields {
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto 25px auto;
+}
+
+/* Styling for Django's as_p output */
+.form-fields p {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.form-fields label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a90e2;
+    margin-bottom: 6px;
+}
+
+.form-fields input, 
+.form-fields select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+}
+
+.form-fields input:focus {
+    border-color: #4a90e2;
+}
+
+/* BUTTONS ROW */
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.btn {
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.add-btn {
+    background-color: #4a90e2; /* Blue Save Button */
+    color: white;
+}
+
+.add-btn:hover {
+    background-color: #357abd;
+}
+
+.cancel-btn {
+    background-color: #f3f4f6; /* Neutral Gray Cancel */
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+}
+
+.cancel-btn:hover {
+    background-color: #e5e7eb;
+}
+
+/* FOOTER - EXACT MATCH TO LIST.HTML */
+.site-footer {
+    background-color: #ffffff;
+    padding: 30px 0;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 40px;
+}
+
+.site-footer p {
+    margin: 5px 0;
+    color: #374151;
+    font-size: 14px;
+}
+
+.site-footer strong {
+    color: #374151;
+}
+
+.dev-tag {
+    font-size: 12px !important;
+    opacity: 0.7;
+}

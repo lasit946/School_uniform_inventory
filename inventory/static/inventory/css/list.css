@@ -1,0 +1,113 @@
+/* Base Styling */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Keeps footer at bottom */
+}
+
+/* Header Navigation Bar */
+.top-nav {
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 50px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-logo {
+    height: 40px; /* Adjust based on your logo shape */
+    width: auto;
+}
+
+.logo-text {
+    font-weight: 800;
+    font-size: 18px;
+    color: #4a90e2;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-greeting strong {
+    font-weight: 800;
+    color: #000;
+}
+
+.logout-btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Container */
+.container {
+    flex: 1; /* Pushes footer down */
+    max-width: 1000px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.main-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+/* Table & Actions */
+.top-actions { display: flex; justify-content: space-between; margin-bottom: 20px; }
+.search-form { display: flex; gap: 5px; }
+.search-form input { padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
+.search-form button { padding: 10px 15px; background-color: #4a90e2; color: white; border: none; border-radius: 5px; cursor: pointer; }
+
+table { width: 100%; border-collapse: collapse; }
+thead { background-color: #4a90e2; color: white; }
+th, td { padding: 15px; border-bottom: 1px solid #eee; }
+.low-stock { background-color: #ffeded; }
+.low { color: #dc2626; font-weight: 700; }
+
+/* Buttons */
+.btn { padding: 6px 12px; border-radius: 4px; color: white; text-decoration: none; font-weight: 600; font-size: 13px; }
+.add-btn { background-color: #2ecc71; padding: 10px 20px; }
+.edit-btn { background-color: #f39c12; }
+.delete-btn { background-color: #e74c3c; }
+
+/* Footer Styling */
+.site-footer {
+    background-color: #fff;
+    padding: 30px 0;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 50px;
+}
+
+.footer-content p {
+    margin: 5px 0;
+    color: #374151;
+    font-size: 14px;
+}
+
+.dev-tag {
+    font-size: 12px !important;
+    opacity: 0.7;
+}

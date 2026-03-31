@@ -1,0 +1,44 @@
+/* DELETE PAGE SPECIFIC STYLES */
+
+.delete-heading {
+    color: #d0021b; /* Warning Red */
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.delete-text {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.warning-box {
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.sub-text {
+    font-size: 13px;
+    color: #718096;
+}
+
+/* Red Delete Confirmation Button */
+.delete-confirm-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.delete-confirm-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Keep the Cancel button neutral gray */
+.cancel-btn {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+}

@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Uniform Item</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'inventory/css/add.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'inventory/images/school-logo.jpg' %}">
+</head>
+<body>
+
+<header class="top-nav">
+    <div class="logo-section">
+        <img src="{% static 'inventory/images/school-logo.jpg' %}" 
+             alt="CEC Logo" 
+             style="height: 40px !important; width: auto !important; display: block;">
+        <span class="logo-text">Cebu Eastern College</span>
+    </div>
+
+    <div class="user-section">
+        {% if user.is_authenticated %}
+            <span class="user-greeting">Welcome, <strong style="font-weight: 800; color: #000;">{{ user.username }}!</strong></span>
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        {% endif %}
+    </div>
+</header>
+
+<main class="main-wrapper">
+    <div class="card-container">
+        <h1 class="main-title">Uniform Inventory</h1>
+        <p class="sub-heading">Add New Item</p>
+
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            <div class="form-fields">
+                {{ form.as_p }}
+            </div>
+
+            <div class="button-row">
+                <button type="submit" class="btn add-btn">Add Item</button>
+                <a href="{% url 'product_list' %}" class="btn cancel-btn">Back to List</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <p>&copy; 2026 <strong>Cebu Eastern College</strong> | All Rights Reserved</p>
+    <p class="dev-tag">Developed by Lado</p>
+</footer>
+
+</body>
+</html>
