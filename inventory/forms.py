@@ -3,16 +3,16 @@ from .models import UniformItem
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-# Inventory form (keep this!)
+# Inventory form
 class UniformItemForm(forms.ModelForm):
     class Meta:
         model = UniformItem
         fields = ['name', 'size', 'quantity', 'price']
 
-# User registration form (new)
+# User registration form
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)  # optional
+    email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email'] # Password fields are handled automatically

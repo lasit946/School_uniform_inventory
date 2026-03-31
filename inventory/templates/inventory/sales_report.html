@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales & Demand Report | CEC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'inventory/css/list.css' %}">
+    <link rel="stylesheet" href="{% static 'inventory/css/sales_report.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'inventory/images/school-logo.jpg' %}">
+</head>
+<body>
+
+<header class="top-nav">
+    <div class="logo-section">
+        <img src="{% static 'inventory/images/school-logo.jpg' %}" alt="School Logo" class="nav-logo">
+        <span class="logo-text">Cebu Eastern College</span>
+    </div>
+
+    <div class="user-section">
+        <a href="{% url 'product_list' %}" class="btn" style="background-color: #4a90e2; color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-weight: 600; font-size: 13px;">Back to Inventory</a>
+    </div>
+</header>
+
+<div class="report-container">
+    <h1 class="main-title">Sales & Demand Report</h1>
+    <p class="sub-heading">Analyzing uniform trends for CEC reordering.</p>
+
+    <div class="report-grid">
+        <div class="stat-card">
+            <h3>Size Demand Level</h3>
+            {% for stat in demand_stats %}
+            <div class="demand-item">
+                <div class="demand-header">
+                    <strong>Size: {{ stat.item__size }}</strong>
+                    <span>{{ stat.total_sold }} units sold</span>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-fill" style="width: {{ stat.total_sold }}0%;"></div>
+                </div>
+            </div>
+            {% empty %}
+            <p style="color: #999;">No sales data available yet.</p>
+            {% endfor %}
+        </div>
+
+        <div class="stat-card">
+            <h3>Recent Transactions</h3>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Size</th>
+                        <th>Staff</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales_history %}
+                    <tr>
+                        <td><strong>{{ sale.item.name }}</strong></td>
+                        <td>{{ sale.item.size }}</td>
+                        <td><span class="staff-tag">{{ sale.sold_by.username }}</span></td>
+                        <td style="color: #888;">{{ sale.sale_date|date:"M d, Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" style="text-align: center; padding: 40px; color: #999;">No transaction history found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-content">
+        <p>&copy; 2026 <strong>Cebu Eastern College</strong> | All Rights Reserved</p>
+        <p class="dev-tag">Developed by Lado</p>
+    </div>
+</footer>
+
+</body>
+</html>

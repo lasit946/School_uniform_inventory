@@ -123,5 +123,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 # After login, go to product list page
-LOGIN_REDIRECT_URL = '/'      # after login
-LOGOUT_REDIRECT_URL = '/login/'  # after logout
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'product_list'
+LOGOUT_REDIRECT_URL = 'login'

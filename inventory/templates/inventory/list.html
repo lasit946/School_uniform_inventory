@@ -7,38 +7,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'inventory/css/list.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'inventory/images/school-logo.jpg' %}">
+    <style>
+        .dropdown { position: relative; display: inline-block; }
+        .dropbtn { background-color: #4a90e2; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-family: 'Inter'; font-weight: 600; }
+        .dropdown-content { display: none; position: absolute; right: 0; background-color: white; min-width: 180px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 10; border-radius: 4px; border: 1px solid #ddd; }
+        .dropdown-content a { color: #333; padding: 12px 16px; text-decoration: none; display: block; font-size: 13px; text-align: left; }
+        .dropdown:hover .dropdown-content { display: block; }
+        .sell-form { padding: 12px; border-bottom: 1px solid #eee; display: flex; flex-direction: column; gap: 5px; }
+        .qty-input { width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px; }
+        .sell-confirm { background: #28a745; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-weight: bold; }
+        .delete-opt { color: #dc3545 !important; }
+    </style>
 </head>
 <body>
 
 <header class="top-nav">
     <div class="logo-section">
-        <img src="{% static 'inventory/images/school-logo.jpg' %}" alt="School Logo" class="nav-logo">
+        <img src="{% static 'inventory/images/school-logo.jpg' %}" class="nav-logo">
         <span class="logo-text">Cebu Eastern College</span>
     </div>
-
     <div class="user-section">
         {% if user.is_authenticated %}
             <span class="user-greeting">Welcome, <strong>{{ user.username }}!</strong></span>
-            <form method="post" action="{% url 'logout' %}" class="logout-form">
-                {% csrf_token %}
-                <button type="submit" class="logout-btn">Logout</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}" class="auth-link">Login</a>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">{% csrf_token %}<button type="submit" class="logout-btn">Logout</button></form>
         {% endif %}
     </div>
 </header>
 
 <div class="container">
     <h1 class="main-title">Uniform Inventory</h1>
-
+    
     <div class="top-actions">
-        {% if user.is_superuser %}
-            <a href="{% url 'add_product' %}" class="btn add-btn">+ Add New Item</a>
-        {% endif %}
-
+        <div style="display: flex; gap: 10px;">
+            <a href="{% url 'add_product' %}" class="btn add-btn">+ Add Item</a>
+            <a href="{% url 'sales_report' %}" class="btn" style="background:#6f42c1; color:white;">Sales Report</a>
+        </div>
         <form method="GET" class="search-form">
-            <input type="text" name="q" placeholder="Search uniform..." value="{{ request.GET.q }}">
+            <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q }}">
             <button type="submit">Search</button>
         </form>
     </div>
@@ -46,35 +51,35 @@
     <table>
         <thead>
             <tr>
-                <th><a href="?sort=name">Name</a></th>
+                <th>Name</th>
                 <th>Size</th>
-                <th><a href="?sort=quantity">Quantity</a></th>
-                <th><a href="?sort=price">Price</a></th>
-                <th>Actions</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th style="text-align: right;">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for item in items %}
             <tr class="{% if item.quantity < 5 %}low-stock{% endif %}">
-                <td class="item-name">{{ item.name }}</td>
+                <td>{{ item.name }}</td>
                 <td>{{ item.size }}</td>
-                <td>
-                    {% if item.quantity < 5 %}
-                        <span class="low">{{ item.quantity }} (Low Stock)</span>
-                    {% else %}
-                        {{ item.quantity }}
-                    {% endif %}
-                </td>
-                <td>${{ item.price }}</td>
-                <td>
-                    {% if user.is_superuser %}
-                        <a href="{% url 'edit_product' item.id %}" class="btn edit-btn">Edit</a>
-                        <a href="{% url 'delete_product' item.id %}" class="btn delete-btn">Delete</a>
-                    {% endif %}
+                <td>{% if item.quantity < 5 %}<span class="low">{{ item.quantity }} (Low)</span>{% else %}{{ item.quantity }}{% endif %}</td>
+                <td>₱{{ item.price }}</td>
+                <td style="text-align: right;">
+                    <div class="dropdown">
+                        <button class="dropbtn">Manage ▼</button>
+                        <div class="dropdown-content">
+                            <form action="{% url 'sell_item' item.id %}" method="POST" class="sell-form">
+                                {% csrf_token %}
+                                <input type="number" name="sell_qty" value="1" min="1" max="{{ item.quantity }}" class="qty-input">
+                                <button type="submit" class="sell-confirm">Confirm Sale</button>
+                            </form>
+                            <a href="{% url 'edit_product' item.id %}">Edit Details</a>
+                            <a href="{% url 'delete_product' item.id %}" class="delete-opt">Delete Item</a>
+                        </div>
+                    </div>
                 </td>
             </tr>
-            {% empty %}
-            <tr><td colspan="5" class="empty-msg">No items found.</td></tr>
             {% endfor %}
         </tbody>
     </table>
@@ -82,9 +87,9 @@
 
 <footer class="site-footer">
     <div class="footer-content">
-        <p>&copy; 2026 <strong>Cebu Eastern College</strong> | All Rights Reserved</p>
-        <p class="dev-tag">Developed by Lado</p>
-    </div>
+      <p>&copy; 2026 <strong>Cebu Eastern College</strong> | All Rights Reserved</p>
+      <p class="dev-tag">Developed by Lado</p>
+        </div>
 </footer>
 
 </body>
