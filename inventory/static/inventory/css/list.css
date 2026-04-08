@@ -87,7 +87,7 @@ th, td { padding: 15px; border-bottom: 1px solid #eee; }
 .low { color: #dc2626; font-weight: 700; }
 
 /* Buttons */
-.btn { padding: 6px 12px; border-radius: 4px; color: white; text-decoration: none; font-weight: 600; font-size: 13px; }
+.btn { padding: 8px 12px; border-radius: 4px; color: white; text-decoration: none; font-weight: 600; font-size: 13px; }
 .add-btn { background-color: #2ecc71; padding: 10px 20px; }
 .edit-btn { background-color: #f39c12; }
 .delete-btn { background-color: #e74c3c; }
@@ -100,7 +100,6 @@ th, td { padding: 15px; border-bottom: 1px solid #eee; }
     border-top: 1px solid #e5e7eb;
     margin-top: 50px;
 }
-
 .footer-content p {
     margin: 5px 0;
     color: #374151;
@@ -110,4 +109,33 @@ th, td { padding: 15px; border-bottom: 1px solid #eee; }
 .dev-tag {
     font-size: 12px !important;
     opacity: 0.7;
+}
+/* --- Inline Size Dropdown Styling --- */
+.size-select {
+    font-family: 'Inter', sans-serif; /* Matches your body font */
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 30px 6px 10px; /* Space for the custom arrow */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    
+    /* Removes default browser arrow */
+    appearance: none;
+    -webkit-appearance: none;
+    
+    /* Custom Blue Arrow (CEC Blue #4a90e2) */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234a90e2' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+}
+
+/* Hover effect to match your "Manage" buttons */
+.size-select:hover {
+    border-color: #4a90e2; 
+    background-color: #f0f7ff;
 }

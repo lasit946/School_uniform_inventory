@@ -8,6 +8,40 @@
     <link rel="stylesheet" href="{% static 'inventory/css/list.css' %}">
     <link rel="stylesheet" href="{% static 'inventory/css/sales_report.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'inventory/images/school-logo.jpg' %}">
+    <style>
+        /* Adding the new improvements directly here so they work immediately */
+        .summary-row {
+            display: flex;
+            gap: 20px;
+            margin: 25px 0;
+        }
+        .summary-card {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #eef2f7;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .summary-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #888;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        .summary-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #333;
+        }
+        .bar-fill {
+            background: linear-gradient(90deg, #4a90e2, #7eb1ef) !important;
+        }
+        
+    </style>
 </head>
 <body>
 
@@ -24,7 +58,23 @@
 
 <div class="report-container">
     <h1 class="main-title">Sales & Demand Report</h1>
-    <p class="sub-heading">Analyzing uniform trends for CEC reordering.</p>
+
+    <div class="summary-row">
+        <div class="summary-card">
+            <span class="summary-label">Total Transactions</span>
+            <span class="summary-value">{{ sales_history.count }}</span>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Peak Demand Size</span>
+            <span class="summary-value" style="color: #4a90e2;">
+                {% if demand_stats %}{{ demand_stats.0.item__size }}{% else %}N/A{% endif %}
+            </span>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Report Date</span>
+            <span class="summary-value" style="font-size: 18px; line-height: 1.6;">{% now "M d, Y" %}</span>
+        </div>
+    </div>
 
     <div class="report-grid">
         <div class="stat-card">

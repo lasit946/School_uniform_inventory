@@ -29,18 +29,33 @@
 
 <main class="main-wrapper">
     <div class="card-container">
-        <h1 class="main-title">Uniform Inventory</h1>
-        <p class="sub-heading">Edit Item: <strong>{{ item.name }}</strong></p>
+        <h1 class="main-title">Restock Inventory</h1>
+        <p class="sub-heading">Item: <strong>{{ item.name }}</strong> | Current Stock: <span style="color: #4a90e2;">{{ item.quantity }}</span></p>
 
         <form method="post" class="styled-form">
             {% csrf_token %}
             <div class="form-fields">
-                {{ form.as_p }}
+                <p>
+                    <label for="id_name">Item Name (Read-Only):</label>
+                    <input type="text" value="{{ item.name }}" disabled style="background-color: #f3f4f6; cursor: not-allowed;">
+                </p>
+                
+                <p>
+                    <label for="id_size">Size:</label>
+                    <input type="text" value="{{ item.size }}" disabled style="background-color: #f3f4f6; cursor: not-allowed;">
+                </p>
+
+                <p style="margin-top: 20px; padding: 15px; background: #eef2f7; border-radius: 8px; border: 1px dashed #4a90e2;">
+                    <label style="color: #4a90e2; font-weight: 800;">Quantity to ADD to Stock:</label>
+                    <input type="number" name="add_stock" value="0" min="0" required 
+                           style="width: 100%; padding: 12px; border: 2px solid #4a90e2; border-radius: 6px; font-size: 16px;">
+                    <small style="color: #666; font-style: italic;">Note: This amount will be added to the current {{ item.quantity }} units.</small>
+                </p>
             </div>
 
             <div class="button-row">
-                <button type="submit" class="btn add-btn">Save Changes</button>
-                <a href="{% url 'product_list' %}" class="btn cancel-btn">Cancel</a>
+                <button type="submit" class="btn add-btn">Confirm Restock</button>
+                <a href="{% url 'product_list' %}" class="btn cancel-btn" style="text-decoration: none; text-align: center;">Cancel</a>
             </div>
         </form>
     </div>

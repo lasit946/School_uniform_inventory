@@ -3,11 +3,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Uniform Inventory</title>
+    <title>Uniform Inventory | CEC</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'inventory/css/list.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'inventory/images/school-logo.jpg' %}">
     <style>
+        /* --- Dropdown Styles --- */
         .dropdown { position: relative; display: inline-block; }
         .dropbtn { background-color: #4a90e2; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-family: 'Inter'; font-weight: 600; }
         .dropdown-content { display: none; position: absolute; right: 0; background-color: white; min-width: 180px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 10; border-radius: 4px; border: 1px solid #ddd; }
@@ -17,13 +18,67 @@
         .qty-input { width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px; }
         .sell-confirm { background: #28a745; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-weight: bold; }
         .delete-opt { color: #dc3545 !important; }
+
+        /* --- THE BUTTON ALIGNMENT FIX --- */
+        .top-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Vertically aligns the group and the search bar */
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            align-items: center; /* This is the leveler */
+            gap: 10px;
+        }
+
+        .btn { 
+            display: inline-flex !important; /* Forces boxes to be flexible */
+            align-items: center !important;  /* Centers text vertically */
+            justify-content: center !important; /* Centers text horizontally */
+            height: 40px !important;         /* FORCED IDENTICAL HEIGHT */
+            padding: 0 20px !important;      /* Standard side padding */
+            border-radius: 6px; 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            line-height: 1 !important;
+            margin: 0 !important;
+        }
+
+        .add-btn { background-color: #2ecc71 !important; }
+        .report-btn { background-color: #6f42c1 !important; }
+
+        /* --- Size Dropdown (The one we fixed earlier) --- */
+        .size-select {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            color: #333 !important;
+            background-color: #ffffff !important;
+            border: 1px solid #ddd !important;
+            border-radius: 6px !important;
+            padding: 5px 25px 5px 10px !important;
+            cursor: pointer !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            outline: none !important;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a90e2' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 8px center !important;
+        }
     </style>
 </head>
 <body>
 
 <header class="top-nav">
     <div class="logo-section">
-        <img src="{% static 'inventory/images/school-logo.jpg' %}" class="nav-logo">
+        <img src="{% static 'inventory/images/school-logo.jpg' %}" class="nav-logo" alt="CEC Logo">
         <span class="logo-text">Cebu Eastern College</span>
     </div>
     <div class="user-section">
@@ -38,10 +93,11 @@
     <h1 class="main-title">Uniform Inventory</h1>
     
     <div class="top-actions">
-        <div style="display: flex; gap: 10px;">
+        <div class="btn-group">
             <a href="{% url 'add_product' %}" class="btn add-btn">+ Add Item</a>
-            <a href="{% url 'sales_report' %}" class="btn" style="background:#6f42c1; color:white;">Sales Report</a>
+            <a href="{% url 'sales_report' %}" class="btn report-btn">Sales Report</a>
         </div>
+
         <form method="GET" class="search-form">
             <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q }}">
             <button type="submit">Search</button>
@@ -62,7 +118,20 @@
             {% for item in items %}
             <tr class="{% if item.quantity < 5 %}low-stock{% endif %}">
                 <td>{{ item.name }}</td>
-                <td>{{ item.size }}</td>
+                <td>
+                    <form action="{% url 'update_size' item.id %}" method="POST" style="margin: 0;">
+                        {% csrf_token %}
+                        <select name="new_size" onchange="this.form.submit()" class="size-select">
+                            <option value="XS" {% if item.size == 'XS' %}selected{% endif %}>XS</option>
+                            <option value="Small" {% if item.size == 'Small' %}selected{% endif %}>Small</option>
+                            <option value="Medium" {% if item.size == 'Medium' %}selected{% endif %}>Medium</option>
+                            <option value="Large" {% if item.size == 'Large' %}selected{% endif %}>Large</option>
+                            <option value="XL" {% if item.size == 'XL' %}selected{% endif %}>XL</option>
+                            <option value="XXL" {% if item.size == 'XXL' %}selected{% endif %}>XXL</option>
+                            <option value="N/A" {% if item.size == 'N/A' %}selected{% endif %}>N/A</option>
+                        </select>
+                    </form>
+                </td>
                 <td>{% if item.quantity < 5 %}<span class="low">{{ item.quantity }} (Low)</span>{% else %}{{ item.quantity }}{% endif %}</td>
                 <td>₱{{ item.price }}</td>
                 <td style="text-align: right;">
@@ -80,6 +149,8 @@
                     </div>
                 </td>
             </tr>
+            {% empty %}
+            <tr><td colspan="5" style="text-align: center; padding: 20px;">No items found.</td></tr>
             {% endfor %}
         </tbody>
     </table>
@@ -89,8 +160,64 @@
     <div class="footer-content">
       <p>&copy; 2026 <strong>Cebu Eastern College</strong> | All Rights Reserved</p>
       <p class="dev-tag">Developed by Lado</p>
-        </div>
+    </div>
 </footer>
+<script>
+    // 1. SMOOTH BUTTON CLICK FEEDBACK
+    // This adds a "pressing" animation to every button when clicked
+    document.querySelectorAll('.btn, .dropbtn, .sell-confirm').forEach(button => {
+        button.addEventListener('mousedown', () => {
+            button.style.transform = 'scale(0.96)';
+            button.style.transition = 'transform 0.1s';
+        });
+        button.addEventListener('mouseup', () => {
+            button.style.transform = 'scale(1)';
+        });
+        button.addEventListener('mouseleave', () => {
+            button.style.transform = 'scale(1)';
+        });
+    });
 
+    // 2. SMOOTH TABLE ROW FOCUS
+    // Highlights the row you click on so you don't get confused
+    document.querySelectorAll('table tbody tr').forEach(row => {
+        row.addEventListener('click', function() {
+            // Remove highlight from all other rows
+            document.querySelectorAll('table tbody tr').forEach(r => r.style.backgroundColor = "");
+            
+            // Add a soft blue highlight to the clicked row
+            // Using your CEC Blue but very light
+            this.style.backgroundColor = "#f0f7ff";
+            this.style.transition = "background-color 0.3s ease";
+        });
+    });
+
+    // 3. SMOOTH MANAGE MENU (FADE IN)
+    // Instead of just appearing, it fades in gently
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        const content = dropdown.querySelector('.dropdown-content');
+        
+        dropdown.addEventListener('mouseenter', () => {
+            content.style.display = 'block';
+            content.style.opacity = '0';
+            content.style.transform = 'translateY(10px)';
+            content.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            
+            // Trigger the animation
+            setTimeout(() => {
+                content.style.opacity = '1';
+                content.style.transform = 'translateY(0)';
+            }, 10);
+        });
+
+        dropdown.addEventListener('mouseleave', () => {
+            content.style.opacity = '0';
+            content.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                content.style.display = 'none';
+            }, 300);
+        });
+    });
+</script>
 </body>
 </html>

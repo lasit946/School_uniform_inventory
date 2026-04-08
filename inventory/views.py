@@ -109,15 +109,20 @@ def add_product(request):
 def edit_product(request, pk):
     item = get_object_or_404(UniformItem, pk=pk)
     if request.method == 'POST':
-        form = UniformItemForm(request.POST, instance=item)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Item updated successfully!")
-            return redirect('product_list')
-    else:
-        form = UniformItemForm(instance=item)
-    return render(request, 'inventory/edit.html', {'form': form, 'item': item})
-
+        # Get the 'add_amount' from the form
+        try:
+            add_amount = int(request.POST.get('add_stock', 0))
+            if add_amount < 0:
+                messages.error(request, "You cannot add a negative amount!")
+            else:
+                item.quantity += add_amount # This adds to the existing stock
+                item.save()
+                messages.success(request, f"Successfully added {add_amount} units to {item.name}.")
+                return redirect('product_list')
+        except ValueError:
+            messages.error(request, "Please enter a valid number.")
+            
+    return render(request, 'inventory/edit.html', {'item': item})
 # ---------------------------
 # FUNCTION 7: Delete Item (Admin Only)
 # ---------------------------
@@ -130,3 +135,17 @@ def delete_product(request, pk):
         messages.warning(request, "Item removed from system.")
         return redirect('product_list')
     return render(request, 'inventory/delete.html', {'item': item})
+# ---------------------------
+# FUNCTION 8: Sizes Selection
+# ---------------------------
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def update_size(request, pk):
+    if request.method == 'POST':
+        item = get_object_or_404(UniformItem, pk=pk)
+        new_size = request.POST.get('new_size')
+        if new_size:
+            item.size = new_size
+            item.save()
+            messages.success(request, f"Size updated to {new_size} for {item.name}")
+    return redirect('product_list')
