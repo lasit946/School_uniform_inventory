@@ -23,22 +23,22 @@
         .top-actions {
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Vertically aligns the group and the search bar */
+            align-items: center;
             margin-bottom: 20px;
         }
 
         .btn-group {
             display: flex;
-            align-items: center; /* This is the leveler */
+            align-items: center;
             gap: 10px;
         }
 
         .btn { 
-            display: inline-flex !important; /* Forces boxes to be flexible */
-            align-items: center !important;  /* Centers text vertically */
-            justify-content: center !important; /* Centers text horizontally */
-            height: 40px !important;         /* FORCED IDENTICAL HEIGHT */
-            padding: 0 20px !important;      /* Standard side padding */
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: 40px !important;
+            padding: 0 20px !important;
             border-radius: 6px; 
             color: white; 
             text-decoration: none; 
@@ -54,23 +54,35 @@
         .add-btn { background-color: #2ecc71 !important; }
         .report-btn { background-color: #6f42c1 !important; }
 
-        /* --- Size Dropdown (The one we fixed earlier) --- */
-        .size-select {
-            font-family: 'Inter', sans-serif !important;
-            font-size: 13px !important;
-            font-weight: 500 !important;
-            color: #333 !important;
-            background-color: #ffffff !important;
-            border: 1px solid #ddd !important;
-            border-radius: 6px !important;
-            padding: 5px 25px 5px 10px !important;
-            cursor: pointer !important;
-            appearance: none !important;
-            -webkit-appearance: none !important;
-            outline: none !important;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a90e2' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E") !important;
-            background-repeat: no-repeat !important;
-            background-position: right 8px center !important;
+        /* --- Updated Size Text Styling --- */
+        .size-tag {
+            font-weight: 700;
+            color: #4a90e2;
+            font-size: 14px;
+            background: #f0f7ff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* --- NEW: Sales Dashboard Card --- */
+        .sales-dash {
+            background: #fff; 
+            border-left: 5px solid #6f42c1; 
+            padding: 15px 20px; 
+            margin-bottom: 25px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+            display: flex; 
+            align-items: center; 
+            gap: 20px;
+        }
+        .sales-icon {
+            background: #f3ebff; 
+            padding: 12px; 
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
         }
     </style>
 </head>
@@ -91,6 +103,18 @@
 
 <div class="container">
     <h1 class="main-title">Uniform Inventory</h1>
+
+    <div class="sales-dash">
+        <div class="sales-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6f42c1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </div>
+        <div>
+            <p style="margin: 0; font-size: 11px; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Today's Activity</p>
+            <p style="margin: 0; font-size: 22px; font-weight: 800; color: #333;">
+                {{ total_sold_today }} <span style="font-size: 15px; font-weight: 500; color: #666;">items sold</span>
+            </p>
+        </div>
+    </div>
     
     <div class="top-actions">
         <div class="btn-group">
@@ -117,22 +141,25 @@
         <tbody>
             {% for item in items %}
             <tr class="{% if item.quantity < 5 %}low-stock{% endif %}">
-                <td>{{ item.name }}</td>
+                <td style="font-weight: 600;">{{ item.name }}</td>
+                
                 <td>
-                    <form action="{% url 'update_size' item.id %}" method="POST" style="margin: 0;">
-                        {% csrf_token %}
-                        <select name="new_size" onchange="this.form.submit()" class="size-select">
-                            <option value="XS" {% if item.size == 'XS' %}selected{% endif %}>XS</option>
-                            <option value="Small" {% if item.size == 'Small' %}selected{% endif %}>Small</option>
-                            <option value="Medium" {% if item.size == 'Medium' %}selected{% endif %}>Medium</option>
-                            <option value="Large" {% if item.size == 'Large' %}selected{% endif %}>Large</option>
-                            <option value="XL" {% if item.size == 'XL' %}selected{% endif %}>XL</option>
-                            <option value="XXL" {% if item.size == 'XXL' %}selected{% endif %}>XXL</option>
-                            <option value="N/A" {% if item.size == 'N/A' %}selected{% endif %}>N/A</option>
-                        </select>
-                    </form>
+                    <span class="size-tag">{{ item.size }}</span>
                 </td>
-                <td>{% if item.quantity < 5 %}<span class="low">{{ item.quantity }} (Low)</span>{% else %}{{ item.quantity }}{% endif %}</td>
+
+                <td class="qty-column">
+                    {% if item.quantity <= 0 %}
+                        <span style="color: #d63031; font-weight: 800; background: #fff5f5; padding: 4px 10px; border-radius: 50px; border: 1.5px solid #ff8787; font-size: 11px; text-transform: uppercase;">
+                            Out of Stock
+                        </span>
+                    {% elif item.quantity < 5 %}
+                        <span class="low" style="color: #d35400; font-weight: 600; background: #fffbe6; padding: 4px 8px; border-radius: 4px;">
+                            {{ item.quantity }} (Low)
+                        </span>
+                    {% else %}
+                        <span style="font-weight: 500; color: #2d3436;">{{ item.quantity }}</span>
+                    {% endif %}
+                </td>
                 <td>₱{{ item.price }}</td>
                 <td style="text-align: right;">
                     <div class="dropdown">
@@ -140,11 +167,19 @@
                         <div class="dropdown-content">
                             <form action="{% url 'sell_item' item.id %}" method="POST" class="sell-form">
                                 {% csrf_token %}
-                                <input type="number" name="sell_qty" value="1" min="1" max="{{ item.quantity }}" class="qty-input">
-                                <button type="submit" class="sell-confirm">Confirm Sale</button>
+                                {% if item.quantity > 0 %}
+                                    <label style="font-size: 10px; color: #666;">Qty to Sell:</label>
+                                    <input type="number" name="sell_qty" value="1" min="1" max="{{ item.quantity }}" class="qty-input">
+                                    <button type="submit" class="sell-confirm">Confirm Sale</button>
+                                {% else %}
+                                    <p style="font-size: 11px; color: #d63031; margin: 5px 0; font-weight: bold; text-align: center;">
+                                        No Stock Available
+                                    </p>
+                                    <a href="{% url 'edit_product' item.id %}" style="background: #e9ecef; color: #495057; text-align: center; padding: 5px; border-radius: 3px; font-size: 11px; text-decoration: none;">+ Restock Now</a>
+                                {% endif %}
                             </form>
                             <a href="{% url 'edit_product' item.id %}">Edit Details</a>
-                            <a href="{% url 'delete_product' item.id %}" class="delete-opt">Delete Item</a>
+                            <a href="{% url 'delete_product' item.id %}" class="delete-opt" onclick="return confirm('Are you sure?')">Delete Item</a>
                         </div>
                     </div>
                 </td>
@@ -162,60 +197,41 @@
       <p class="dev-tag">Developed by Lado</p>
     </div>
 </footer>
+
 <script>
-    // 1. SMOOTH BUTTON CLICK FEEDBACK
-    // This adds a "pressing" animation to every button when clicked
+    // Animations for buttons
     document.querySelectorAll('.btn, .dropbtn, .sell-confirm').forEach(button => {
-        button.addEventListener('mousedown', () => {
-            button.style.transform = 'scale(0.96)';
-            button.style.transition = 'transform 0.1s';
-        });
-        button.addEventListener('mouseup', () => {
-            button.style.transform = 'scale(1)';
-        });
-        button.addEventListener('mouseleave', () => {
-            button.style.transform = 'scale(1)';
-        });
+        button.addEventListener('mousedown', () => { button.style.transform = 'scale(0.96)'; });
+        button.addEventListener('mouseup', () => { button.style.transform = 'scale(1)'; });
+        button.addEventListener('mouseleave', () => { button.style.transform = 'scale(1)'; });
     });
 
-    // 2. SMOOTH TABLE ROW FOCUS
-    // Highlights the row you click on so you don't get confused
+    // Row Highlighting
     document.querySelectorAll('table tbody tr').forEach(row => {
         row.addEventListener('click', function() {
-            // Remove highlight from all other rows
             document.querySelectorAll('table tbody tr').forEach(r => r.style.backgroundColor = "");
-            
-            // Add a soft blue highlight to the clicked row
-            // Using your CEC Blue but very light
             this.style.backgroundColor = "#f0f7ff";
             this.style.transition = "background-color 0.3s ease";
         });
     });
 
-    // 3. SMOOTH MANAGE MENU (FADE IN)
-    // Instead of just appearing, it fades in gently
+    // Fade-in Manage Menu
     document.querySelectorAll('.dropdown').forEach(dropdown => {
         const content = dropdown.querySelector('.dropdown-content');
-        
         dropdown.addEventListener('mouseenter', () => {
             content.style.display = 'block';
             content.style.opacity = '0';
             content.style.transform = 'translateY(10px)';
             content.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-            
-            // Trigger the animation
             setTimeout(() => {
                 content.style.opacity = '1';
                 content.style.transform = 'translateY(0)';
             }, 10);
         });
-
         dropdown.addEventListener('mouseleave', () => {
             content.style.opacity = '0';
             content.style.transform = 'translateY(10px)';
-            setTimeout(() => {
-                content.style.display = 'none';
-            }, 300);
+            setTimeout(() => { content.style.display = 'none'; }, 300);
         });
     });
 </script>

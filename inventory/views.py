@@ -3,7 +3,8 @@ from .models import UniformItem, Sale
 from .forms import UniformItemForm, UserRegisterForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Sum # Added Sum here
+from django.utils import timezone # Added timezone here
 
 # ---------------------------
 # SECURITY: Admin check function
@@ -25,14 +26,10 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'inventory/register.html', {'form': form})
-
-# ---------------------------
-# FUNCTION 2: Inventory List (Main Dashboard)
-# ---------------------------
 @login_required
 def product_list(request):
-    query = request.GET.get('q')  # For Search Feature
-    sort = request.GET.get('sort') # For Sorting Feature
+    query = request.GET.get('q')  
+    sort = request.GET.get('sort') 
 
     items = UniformItem.objects.all()
 
@@ -41,9 +38,21 @@ def product_list(request):
     
     if sort in ['name', 'quantity', 'price']:
         items = items.order_by(sort)
+    else:
+        items = items.order_by('name') # Default sorting
 
-    return render(request, 'inventory/list.html', {'items': items})
+    # --- NEW: Calculate Today's Total Sold ---
+    today = timezone.now().date()
+    # Sums quantity_sold for all Sale records created today
+    total_sold_today = Sale.objects.filter(sale_date__date=today).aggregate(Sum('quantity_sold'))['quantity_sold__sum'] or 0
 
+    return render(request, 'inventory/list.html', {
+        'items': items,
+        'total_sold_today': total_sold_today # Pass this to your HTML
+    })
+# ---------------------------
+# FUNCTION 3: Sell
+# ---------------------------
 @login_required
 @user_passes_test(admin_required)
 def sell_item(request, pk):
@@ -135,17 +144,3 @@ def delete_product(request, pk):
         messages.warning(request, "Item removed from system.")
         return redirect('product_list')
     return render(request, 'inventory/delete.html', {'item': item})
-# ---------------------------
-# FUNCTION 8: Sizes Selection
-# ---------------------------
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
-def update_size(request, pk):
-    if request.method == 'POST':
-        item = get_object_or_404(UniformItem, pk=pk)
-        new_size = request.POST.get('new_size')
-        if new_size:
-            item.size = new_size
-            item.save()
-            messages.success(request, f"Size updated to {new_size} for {item.name}")
-    return redirect('product_list')
